@@ -7,8 +7,7 @@ router.get('/:source?', (req: any, res: any) => {
   const { source } = req.query
 
   if (source && !acceptedSources.includes(source)) {
-    res.statusCode = 400
-    return res.send({ error: 'Source unknown' })
+    return res.status(400).send({ error: 'Source unknown' })
   }
 
   res.send({ transactions: [] })
