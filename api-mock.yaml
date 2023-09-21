@@ -1,0 +1,77 @@
+openapi: '3.0.0'
+info:
+  title: External API mock
+  version: '1.0'
+servers:
+  - url: 'http://127.0.0.1:4010'
+paths:
+  /api/revolut:
+    get:
+      summary: Revolut
+      tags: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/RevolutResponse'
+  /api/monzo:
+    get:
+      summary: Monzo
+      tags: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/MonzoResponse'
+  /api/sterling:
+    get:
+      summary: Sterling
+      tags: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/SterlingResponse'
+components:
+  responses:
+    RevolutResponse:
+      description: OK
+      content:
+        application/json:
+          example: {
+            "id": "tr_1234567890",
+            "created_at": "2022-03-21T14:16:32.000Z",
+            "completed_at": "2022-03-21T14:18:32.000Z",
+            "state": "COMPLETED",
+            "amount": {
+              "value": "-25.00",
+              "currency": "EUR"
+            },
+            "merchant": null,
+            "counterparty": {
+              "id": "acc_1234567890",
+              "name": "Jane Smith"
+            },
+            "reference": "SEPA-1234567890"
+          }
+    MonzoResponse:
+      description: OK
+      content:
+        application/json:
+          example: {
+            "id": "tx_00009XvJjKUW8gQssn4b4L",
+            "created": "2022-03-21T14:16:32.000Z",
+            "description": "Payment to Jane Smith",
+            "amount": -2500,
+            "currency": "EUR",
+            "metadata": {
+              "reference": "SEPA-1234567890"
+            }
+          }
+    SterlingResponse:
+      description: OK
+      content:
+        application/json:
+          example: {
+            "id": "6d4c34fc-94e7-4e52-8a36-9c40b102ecfc",
+            "currency": "EUR",
+            "amount": "-25.00",
+            "direction": "OUT",
+            "narrative": "Payment to Jane Smith",
+            "created": "2022-03-21T14:16:32.000Z",
+            "reference": "SEPA-1234567890"
+          }
