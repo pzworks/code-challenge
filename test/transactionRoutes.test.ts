@@ -49,4 +49,15 @@ describe('Transactions endpoint', () => {
         done()
       })
   })
+
+  it('transactions endpoint should throw on "source" param out of list ', (done: any) => {
+    request(app)
+      .get('/transactions?source=toyotaPoopra')
+      .expect(400)
+      .end((err, res) => {
+        if (err) done(err)
+        expect(res.body).to.have.property('error').and.equal('Source unknown')
+        done()
+      })
+  })
 })
