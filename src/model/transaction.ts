@@ -1,52 +1,47 @@
-export interface Transaction {
-  id: string
-  created: string // ISO8601 date format
-  description: string
-  amount: {
-    value: string
-    currency: string // Currency code, e.g., EUR, USD
-  }
-  type: 'DEBIT' | 'CREDIT'
-  reference: string
-  metadata: {
-    source: string // Source bank
-  }
+export class Transaction {
+  constructor(
+    public id: string,
+    public created: string,
+    public description: string,
+    public amount: { value: string; currency: string },
+    public type: 'DEBIT' | 'CREDIT',
+    public reference: string,
+    public metadata: { source: string }
+  ) {}
 }
 
-export interface MonzoTransaction {
-  id: string;
-  created: string;
-  description: string;
-  amount: number;
-  currency: string;
-  metadata: {
-    reference: string;
-  };
+export class MonzoTransaction {
+  constructor(
+    public id: string,
+    public created: string,
+    public description: string,
+    public amount: number,
+    public currency: string,
+    public metadata: { reference: string }
+  ) {}
 }
 
-export interface RevolutTransaction {
-  id: string;
-  created_at: string;
-  completed_at: string;
-  state: string;
-  amount: {
-    value: string;
-    currency: string;
-  };
-  merchant: null | string;
-  counterparty: {
-    id: string;
-    name: string;
-  };
-  reference: string;
+export class RevolutTransaction {
+  constructor(
+    public id: string,
+    public created_at: string,
+    public completed_at: string,
+    public state: string,
+    public amount: { value: string; currency: string },
+    public merchant: null | string,
+    public counterparty: { id: string; name: string },
+    public reference: string
+  ) {}
 }
 
-export interface SterlingTransaction {
-  id: string;
-  currency: string;
-  amount: string;
-  direction: "IN" | "OUT";
-  narrative: string;
-  created: string;
-  reference: string;
+export class SterlingTransaction {
+  constructor(
+    public id: string,
+    public currency: string,
+    public amount: string,
+    public direction: 'IN' | 'OUT',
+    public narrative: string,
+    public created: string,
+    public reference: string
+  ) {}
 }

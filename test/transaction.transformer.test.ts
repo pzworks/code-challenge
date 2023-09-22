@@ -10,8 +10,9 @@ import {
 import {
   transformRevolutToTransaction,
   transformMonzoToTransaction,
-  transformSterlingToTransaction, getTransformerBySource,
+  transformSterlingToTransaction, getTransformedBySource,
 } from '../src/transformers/transaction.transformer';
+import sinon from "sinon";
 
 describe('Transform Functions', () => {
   describe('transformRevolutToTransaction', () => {
@@ -116,35 +117,69 @@ describe('Transform Functions', () => {
   });
 });
 
-describe('getTransformerBySource', () => {
-  it('should return the correct transformer function name', () => {
-    const testData = [
-      { source: 'revolut', expectedFunctionName: 'transformRevolutToTransaction' },
-      { source: 'monzo', expectedFunctionName: 'transformMonzoToTransaction' },
-      { source: 'sterling', expectedFunctionName: 'transformSterlingToTransaction' },
-    ];
+const revolutTransaction: RevolutTransaction = {
+  id: '1',
+  created_at: '2023-09-20',
+  completed_at: '2023-09-21',
+  state: 'COMPLETED',
+  amount: { value: '100', currency: 'EUR' },
+  merchant: null,
+  counterparty: { id: '2', name: 'John Doe' },
+  reference: 'SEPA-123',
+};
 
-    testData.forEach((data) => {
-      const { source, expectedFunctionName } = data;
-      const result = getTransformerBySource(source);
+const monzoTransaction: MonzoTransaction = {
+  id: '3',
+  created: '2023-09-20',
+  description: 'Purchase',
+  amount: 50,
+  currency: 'GBP',
+  metadata: { reference: 'MONZO-456' },
+};
 
-      expect(result).to.deep.equal([expectedFunctionName]);
-    });
+const sterlingTransaction: SterlingTransaction = {
+  id: '4',
+  currency: 'USD',
+  amount: '75',
+  direction: 'OUT',
+  narrative: 'Payment',
+  created: '2023-09-20',
+  reference: 'STERLING-789',
+};
+
+describe('getTransformedBySource', () => {
+  it('should return null for empty source', () => {
+    const source = '';
+    const result = getTransformedBySource(source, null);
+
+    expect(result).to.be.null;
   });
 
-  it('should handle source with mixed case', () => {
-    const mixedCaseSource = 'ReVolUt';
-    const expectedFunctionName = 'transformRevolutToTransaction';
+  it('should transform to Transaction for source "revolut"', () => {
+    const source = 'revolut';
+    const result = getTransformedBySource(source, revolutTransaction);
 
-    const result = getTransformerBySource(mixedCaseSource);
-
-    expect(result).to.deep.equal([expectedFunctionName]);
+    expect(result).to.be.instanceOf(Transaction);
   });
 
-  it('should handle empty source', () => {
-    const emptySource = '';
-    const result = getTransformerBySource(emptySource);
+  it('should transform to Transaction for source "monzo"', () => {
+    const source = 'monzo';
+    const result = getTransformedBySource(source, monzoTransaction);
 
-    expect(result).to.equal(null);
+    expect(result).to.be.instanceOf(Transaction);
+  });
+
+  it('should transform to Transaction for source "sterling"', () => {
+    const source = 'sterling';
+    const result = getTransformedBySource(source, sterlingTransaction);
+
+    expect(result).to.be.instanceOf(Transaction);
+  });
+
+  it('should return null for unknown source', () => {
+    const source = 'unknown';
+    const result = getTransformedBySource(source, null);
+
+    expect(result).to.be.null;
   });
 });
