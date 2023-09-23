@@ -12,7 +12,6 @@ import {
   transformMonzoToTransaction,
   transformSterlingToTransaction, getTransformedBySource,
 } from '../src/transformers/transaction.transformer';
-import sinon from "sinon";
 
 describe('Transform Functions', () => {
   describe('transformRevolutToTransaction', () => {
