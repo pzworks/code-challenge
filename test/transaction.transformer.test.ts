@@ -13,6 +13,36 @@ import {
   transformSterlingToTransaction, getTransformedBySource,
 } from '../src/transformers/transaction.transformer';
 
+const revolutTransaction: RevolutTransaction = {
+  id: '1',
+  created_at: '2023-09-20',
+  completed_at: '2023-09-21',
+  state: 'COMPLETED',
+  amount: { value: '100', currency: 'EUR' },
+  merchant: null,
+  counterparty: { id: '2', name: 'John Doe' },
+  reference: 'SEPA-123',
+};
+
+const monzoTransaction: MonzoTransaction = {
+  id: '3',
+  created: '2023-09-20',
+  description: 'Purchase',
+  amount: 50,
+  currency: 'GBP',
+  metadata: { reference: 'MONZO-456' },
+};
+
+const sterlingTransaction: SterlingTransaction = {
+  id: '4',
+  currency: 'USD',
+  amount: '75',
+  direction: 'OUT',
+  narrative: 'Payment',
+  created: '2023-09-20',
+  reference: 'STERLING-789',
+};
+
 describe('Transform Functions', () => {
   describe('transformRevolutToTransaction', () => {
     it('should transform RevolutTransaction to Transaction', () => {
@@ -116,36 +146,6 @@ describe('Transform Functions', () => {
   });
 });
 
-const revolutTransaction: RevolutTransaction = {
-  id: '1',
-  created_at: '2023-09-20',
-  completed_at: '2023-09-21',
-  state: 'COMPLETED',
-  amount: { value: '100', currency: 'EUR' },
-  merchant: null,
-  counterparty: { id: '2', name: 'John Doe' },
-  reference: 'SEPA-123',
-};
-
-const monzoTransaction: MonzoTransaction = {
-  id: '3',
-  created: '2023-09-20',
-  description: 'Purchase',
-  amount: 50,
-  currency: 'GBP',
-  metadata: { reference: 'MONZO-456' },
-};
-
-const sterlingTransaction: SterlingTransaction = {
-  id: '4',
-  currency: 'USD',
-  amount: '75',
-  direction: 'OUT',
-  narrative: 'Payment',
-  created: '2023-09-20',
-  reference: 'STERLING-789',
-};
-
 describe('getTransformedBySource', () => {
   it('should return null for empty source', () => {
     const source = '';
@@ -177,6 +177,13 @@ describe('getTransformedBySource', () => {
 
   it('should return null for unknown source', () => {
     const source = 'unknown';
+    const result = getTransformedBySource(source, null);
+
+    expect(result).to.be.null;
+  });
+
+  it('should return null for empty source', () => {
+    const source = '';
     const result = getTransformedBySource(source, null);
 
     expect(result).to.be.null;

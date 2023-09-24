@@ -46,7 +46,23 @@ components:
               "id": "acc_1234567890",
               "name": "Jane Smith"
             },
-            "reference": "SEPA-1234567890"
+            "reference": "SEPA-1234567890",
+          },
+          {
+            "id": "tr_1234567891",
+            "created_at": "2022-03-21T14:16:32.000Z",
+            "completed_at": "2022-03-21T14:18:32.000Z",
+            "state": "COMPLETED",
+            "amount": {
+              "value": "-25.00",
+              "currency": "EUR"
+            },
+            "merchant": null,
+            "counterparty": {
+              "id": "acc_1234567890",
+              "name": "Jane Smith"
+            },
+            "reference": "SEPA-1234567890",
           }]
     MonzoResponse:
       description: OK
@@ -61,6 +77,16 @@ components:
             "metadata": {
               "reference": "SEPA-1234567890"
             }
+          },
+          {
+            "id": "tx_00009XvJjKUW8gQssn4b5L",
+            "created": "2022-03-21T14:16:32.000Z",
+            "description": "Payment to Jane Smith",
+            "amount": -2500,
+            "currency": "EUR",
+            "metadata": {
+              "reference": "SEPA-1234567890"
+            }
           }]
     SterlingResponse:
       description: OK
@@ -68,6 +94,15 @@ components:
         application/json:
           example: [{
             "id": "6d4c34fc-94e7-4e52-8a36-9c40b102ecfc",
+            "currency": "EUR",
+            "amount": "-25.00",
+            "direction": "OUT",
+            "narrative": "Payment to Jane Smith",
+            "created": "2022-03-21T14:16:32.000Z",
+            "reference": "SEPA-1234567890"
+          },
+          {
+            "id": "6d4c34fc-94e7-4e52-8a36-9c40b102e3fc",
             "currency": "EUR",
             "amount": "-25.00",
             "direction": "OUT",

@@ -96,4 +96,67 @@ describe('TransactionService', () => {
     expect(collectedTransactions).to.have.lengthOf.at.least(1);
   });
 
+  it('should handle errors from TransactionRepository', async () => {
+    const repository = repositoryMock as TransactionRepository;
+    const getRevolutStub = sinon.stub(repository, 'getTransactionsFrom');
+    getRevolutStub.rejects(new Error('Repository error'));
+
+    const service = new TransactionService(repository);
+
+    try {
+      await service.collectTransactions('revolut');
+    } catch (error: any) {
+      expect(error).to.be.an('Error');
+      expect(error.message).to.equal('Repository error');
+    }
+
+    getRevolutStub.restore();
+  });
+
+  it('should collect transactions from multiple sources', async () => {
+    const repository = repositoryMock as TransactionRepository;
+    const getRevolutStub = sinon.stub(repository, 'getTransactionsFrom');
+    getRevolutStub.resolves([
+      {
+        id: '1',
+        created: '2023-09-20',
+        description: 'Purchase',
+        amount: { value: '100', currency: 'EUR' },
+        type: 'DEBIT',
+        reference: 'SEPA-123',
+        metadata: { source: 'source' },
+      },
+      {
+        id: '1',
+        created: '2023-09-20',
+        description: 'Purchase',
+        amount: { value: '100', currency: 'EUR' },
+        type: 'DEBIT',
+        reference: 'SEPA-123',
+        metadata: { source: 'source' },
+      },
+      {
+        id: '1',
+        created: '2023-09-20',
+        description: 'Purchase',
+        amount: { value: '100', currency: 'EUR' },
+        type: 'DEBIT',
+        reference: 'SEPA-123',
+        metadata: { source: 'source' },
+      },
+    ]);
+
+    const service = new TransactionService(repository);
+
+    const sources = ['revolut', 'monzo', 'sterling'];
+    for (const source of sources) {
+      const collectedTransactions = await service.collectTransactions(source);
+
+      expect(collectedTransactions).to.be.an('array');
+      expect(collectedTransactions.length).to.equal(3);
+    }
+
+    getRevolutStub.restore();
+  });
+
 });

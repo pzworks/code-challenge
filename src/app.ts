@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express from 'express'
 import defaultRoutes from './routes/default.route'
 import transactionRoutes from './routes/transaction.route'
